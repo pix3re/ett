@@ -1,12 +1,25 @@
 package main
 
 import (
+	"ett/internal/models"
 	"log"
 	"mime"
 	"net/http"
 )
 
 func main() {
+	db, err := openDB()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = initDB(db, "../SQL/schema.sql")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	templateCache, err := newTemplateCache()
 
 	if err != nil {
@@ -15,6 +28,8 @@ func main() {
 
 	app := &application{
 		templateCache: templateCache,
+		expense:       &models.ExpenseModel{DB: db},
+		category:      &models.CategoryModel{DB: db},
 	}
 
 	log.Println("Server running on http://localhost:8000")

@@ -2,8 +2,12 @@ package main
 
 import (
 	"bytes"
+	"database/sql"
 	"fmt"
 	"net/http"
+	"os"
+
+	_ "github.com/glebarez/go-sqlite"
 )
 
 func (app *application) render(w http.ResponseWriter, status int, page string, data templateData) {
@@ -23,4 +27,28 @@ func (app *application) render(w http.ResponseWriter, status int, page string, d
 
 	w.WriteHeader(status)
 	buf.WriteTo(w)
+}
+
+func openDB() (*sql.DB, error) {
+	db, err := sql.Open("sqlite", "../DB/test.db")
+
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
+}
+
+func initDB(db *sql.DB, schemaPath string) error {
+	schema, err := os.ReadFile(schemaPath)
+
+	if err != nil {
+		return err
+	}
+
+	if _, err := db.Exec(string(schema)); err != nil {
+		return err
+	}
+
+	return nil
 }
