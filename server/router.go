@@ -10,11 +10,12 @@ func (app *application) router() *http.ServeMux {
 
 	mux.HandleFunc("GET /{$}", app.home)
 
-	mux.HandleFunc("GET /new-expense", app.newExpense)
+	mux.HandleFunc("GET /expense-new", app.expenseNew)
 	mux.HandleFunc("POST /expense-add", app.expenseAdd)
 
-	mux.HandleFunc("GET /categories", app.getCategories) // return category json to populate lookup ? Or render html in backkend with all values ?
-	mux.HandleFunc("GET /new-category", app.newCategory)
+	mux.HandleFunc("GET /categories", app.categoriesGet) // return category json to populate lookup ? Or render html in backkend with all values ?
+	mux.HandleFunc("GET /categories-new", app.categoriesForm)
+	mux.HandleFunc("POST /categories-new", app.categoriesNew)
 
 	mux.Handle("/static/", http.StripPrefix("/static", fs))
 

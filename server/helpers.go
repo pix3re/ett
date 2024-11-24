@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -29,6 +30,17 @@ func (app *application) render(w http.ResponseWriter, status int, page string, d
 	buf.WriteTo(w)
 }
 
+func (app *application) sendJSON(w http.ResponseWriter, data any) {
+	jsonStr, err := json.Marshal(data)
+	if err != nil {
+		app.serverError(w, err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	w.Write(jsonStr)
+}
+
 func openDB() (*sql.DB, error) {
 	db, err := sql.Open("sqlite", "../DB/test.db")
 
@@ -51,4 +63,13 @@ func initDB(db *sql.DB, schemaPath string) error {
 	}
 
 	return nil
+}
+
+func (app *application) serverError(w http.ResponseWriter, err error) {
+	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	fmt.Println(err)
+}
+
+func (app *application) clientError(w http.ResponseWriter, status int) {
+	http.Error(w, http.StatusText(status), status)
 }

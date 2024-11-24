@@ -1,12 +1,12 @@
 {{define "title"}}New Category{{end}}
 
 {{define "body"}}
-<form action="/category-add" method="POST">
+<form action="/categories-new" method="post">
     <label for="cCategoryName">Name</label>
-    <input type="text" id="cCategoryName"/>
+    <input type="text" name="name" id="cCategoryName"/>
 
     <label for="cCategoryDesc">Description</label>
-    <input type="text" id="cCategoryDesc"/>
+    <input type="text" name="description" id="cCategoryDesc"/>
 
     <button type="submit">Add Category</button>
 </form>

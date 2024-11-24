@@ -12,4 +12,6 @@ type application struct {
 }
 
 type templateData struct {
+	Categories []*models.Category
+	Expenses   []*models.Expense
 }
